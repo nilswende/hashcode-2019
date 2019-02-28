@@ -1,6 +1,7 @@
 package hashcode;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -16,7 +17,7 @@ public class Slide {
     }
 
     public static Slide createHorizontalSlide (Photo photo) {
-        return new Slide(Arrays.asList(photo));
+        return new Slide(Collections.singletonList(photo));
     }
 
     public static Slide createVerticalSlide (Photo photo1, Photo photo2) {
@@ -27,11 +28,11 @@ public class Slide {
         return null;
     }
 
-    public String toString(){
+    public String toString () {
         String output = "";
         output += photos.get(0).toString();
 
-        if (photos.size()>1){
+        if (photos.size() > 1) {
             output += " " + photos.get(1).toString();
         }
         return output;
