@@ -29,6 +29,10 @@ public class Slide {
         return strings;
     }
 
+    public int getTagCount() {
+        return getTags().size();
+    }
+
     public String toString () {
         String output = "";
         output += photos.get(0).toString();

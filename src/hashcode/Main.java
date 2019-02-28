@@ -1,5 +1,6 @@
 package hashcode;
 
+import hashcode.implementations.DescendingTagCount;
 import hashcode.interfaces.PhotoToSlide;
 import hashcode.interfaces.SlideToSlideshow;
 import hashcode.interfaces.SlideshowMaker;
@@ -17,7 +18,7 @@ public class Main {
 
 
             PhotoToSlide a = null;
-            SlideToSlideshow b = null;
+            SlideToSlideshow b = new DescendingTagCount();
             SlideshowMaker maker = new SlideshowMaker(a, b);
             Slideshow show = maker.make(photos);
 
