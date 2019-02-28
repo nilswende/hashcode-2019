@@ -1,6 +1,8 @@
 package hashcode;
 
+import hashcode.implementations.ConcurrentGroupedDescendingTagSorter;
 import hashcode.implementations.DescendingTagCount;
+import hashcode.implementations.GroupedDescendingTagSorter;
 import hashcode.implementations.pts.GreatestTagCountDifference;
 import hashcode.interfaces.PhotoToSlide;
 import hashcode.interfaces.SlideToSlideshow;
@@ -20,18 +22,19 @@ public class Main {
 
 
             PhotoToSlide a = new GreatestTagCountDifference();
-            SlideToSlideshow b = new DescendingTagCount();
+            SlideToSlideshow b = new ConcurrentGroupedDescendingTagSorter(1);
             SlideshowMaker maker = new SlideshowMaker(a, b);
             Slideshow show = maker.make(photos);
 
+            final String fileName = file.getName();
             int score = Score.getScore(show.getSlides());
-            System.out.println("The score is: " + score);
+            System.out.println("The " + fileName + " score is: " + score);
+            System.out.println("\n");
             finalScore += score;
 
-            final String fileName = file.getName();
             Output.writeOutput(show.getSlides(), "out/" + fileName.substring(0, fileName.indexOf(".")) + ".out.txt");
         }
-        System.out.println("The final score is: "+finalScore);
+        System.out.println("The final score is: " + finalScore);
     }
 
 }
