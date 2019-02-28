@@ -31,11 +31,11 @@ public class Main {
         Collections.shuffle(verticals);
         Collections.shuffle(horizontals);
 
-        for (int i = 0; i < verticals.size() - 1; i++) {
-            show.add(Slide.createVerticalSlide(verticals.get(i), verticals.get(i+1)));
+        for (int i = 0; i < verticals.size() - 1; i += 2) {
+            show.add(Slide.createVerticalSlide(verticals.get(i), verticals.get(i + 1)));
         }
 
-        for (Photo photo: horizontals) {
+        for (Photo photo : horizontals) {
             show.add(Slide.createHorizontalSlide(photo));
         }
 
@@ -44,3 +44,4 @@ public class Main {
     }
 
 }
+
