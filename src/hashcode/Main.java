@@ -12,7 +12,7 @@ public class Main {
     public static void main (String[] args) throws FileNotFoundException {
         final File[] files = new File("res").listFiles();
         for (File file : files) {
-            Input.read(file);
+            List<Photo> photos = Input.read(file);
 
             // TODO
 
