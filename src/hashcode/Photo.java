@@ -1,5 +1,6 @@
 package hashcode;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -35,6 +36,12 @@ public class Photo {
 
     public int getTagCount () {
         return getTags().size();
+    }
+
+    public int getTagSimilarity (Photo that) {
+        final HashSet<String> thisTags = new HashSet<>(tags);
+        thisTags.retainAll(that.tags);
+        return thisTags.size();
     }
 
     public String toString(){
