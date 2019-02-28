@@ -4,10 +4,7 @@ import hashcode.Photo;
 import hashcode.Slide;
 import hashcode.interfaces.PhotoToSlide;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -19,8 +16,7 @@ public class GreatestTagCountDifference implements PhotoToSlide {
     public List<Slide> make (List<Photo> photos) {
         final List<Slide> slides = new ArrayList<>();
 
-        List<Photo> verticals = photos.stream().filter(Photo::isVertical).sorted(Comparator.comparingInt(a -> a.getTags().size())).collect(Collectors.toList());
-        final ArrayDeque<Photo> deque = new ArrayDeque<>(verticals);
+        final Deque<Photo> deque = photos.stream().filter(Photo::isVertical).sorted(Comparator.comparingInt(a -> a.getTags().size())).collect(Collectors.toCollection(ArrayDeque::new));
         for (int i = 0; i < deque.size() / 2; i++) {
             final Slide slide = Slide.createVerticalSlide(deque.pollFirst(), deque.pollLast());
             slides.add(slide);
