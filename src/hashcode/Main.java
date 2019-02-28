@@ -1,6 +1,7 @@
 package hashcode;
 
 import hashcode.implementations.DescendingTagCount;
+import hashcode.implementations.pts.GreatestTagCountDifference;
 import hashcode.interfaces.PhotoToSlide;
 import hashcode.interfaces.SlideToSlideshow;
 import hashcode.interfaces.SlideshowMaker;
@@ -17,7 +18,7 @@ public class Main {
             final List<Photo> photos = Input.read(file);
 
 
-            PhotoToSlide a = null;
+            PhotoToSlide a = new GreatestTagCountDifference();
             SlideToSlideshow b = new DescendingTagCount();
             SlideshowMaker maker = new SlideshowMaker(a, b);
             Slideshow show = maker.make(photos);
