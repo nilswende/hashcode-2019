@@ -15,6 +15,7 @@ public class Main {
     public static void main (String[] args) throws FileNotFoundException {
         int finalScore = 0;
         final File[] files = new File("res").listFiles();
+        assert files != null;
         for (File file : files) {
             final List<Photo> photos = Input.read(file);
             final String filename = file.getName().substring(0, file.getName().indexOf("."));
