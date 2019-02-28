@@ -4,6 +4,7 @@ import hashcode.Photo;
 import hashcode.Slide;
 import hashcode.interfaces.PhotoToSlide;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,17 +17,21 @@ public class SmallestTagThrowaway implements PhotoToSlide {
         final List<Slide> slides = photos.stream().filter(Photo::isHorizontal).map(Slide::createHorizontalSlide).collect(Collectors.toList());
 
         List<Photo> verticals = photos.stream().filter(Photo::isVertical).collect(Collectors.toList());
-        for (int i = 0; i < verticals.size(); i++) {
-            Photo photo = verticals.get(i);
-            Photo second = null;
+        while (verticals.size() > 1) {
+            Photo photo = verticals.get(0);
+            Photo second = verticals.get(1);
+            int secondIndex = 1;
             int similarity = Integer.MAX_VALUE;
-            for (int i1 = 0; i1 < verticals.size() && i1 != i; i1++) {
-                Photo that = verticals.get(i1);
+            for (int inner = 2; inner < verticals.size(); inner++) {
+                Photo that = verticals.get(inner);
                 if (photo.getTagSimilarity(that) < similarity) {
                     second = that;
+                    secondIndex = inner;
                 }
             }
             slides.add(Slide.createVerticalSlide(photo, second));
+            verticals.remove(secondIndex);
+            verticals.remove(0);
         }
 
         return slides;
