@@ -33,4 +33,8 @@ public class Photo {
         return tags;
     }
 
+    public String toString(){
+        return String.valueOf(id);
+    }
+
 }

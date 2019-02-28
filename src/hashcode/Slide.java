@@ -27,4 +27,13 @@ public class Slide {
         return null;
     }
 
+    public String toString(){
+        String output = "";
+        output += photos.get(0).toString();
+
+        if (photos.size()>1){
+            output += " " + photos.get(1).toString();
+        }
+        return output;
+    }
 }
