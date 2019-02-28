@@ -4,7 +4,6 @@ import hashcode.Photo;
 import hashcode.Slide;
 import hashcode.interfaces.PhotoToSlide;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,8 +23,9 @@ public class SmallestTagThrowaway implements PhotoToSlide {
             int similarity = Integer.MAX_VALUE;
             for (int inner = 2; inner < verticals.size(); inner++) {
                 Photo that = verticals.get(inner);
-                if (photo.getTagSimilarity(that) < similarity) {
-                    similarity = photo.getTagSimilarity(that);
+                final int tagSimilarity = photo.getTagSimilarity(that);
+                if (tagSimilarity < similarity) {
+                    similarity = tagSimilarity;
                     second = that;
                     secondIndex = inner;
                 }
