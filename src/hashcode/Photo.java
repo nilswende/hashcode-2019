@@ -7,12 +7,18 @@ import java.util.Set;
  */
 public class Photo {
 
+    private final int id;
     private final boolean horizontal;
     private final Set<String> tags;
 
-    public Photo (boolean horizontal, Set<String> tags) {
+    public Photo (int id, boolean horizontal, Set<String> tags) {
+        this.id = id;
         this.horizontal = horizontal;
         this.tags = tags;
+    }
+
+    public int getId () {
+        return id;
     }
 
     public boolean isHorizontal () {
