@@ -21,7 +21,7 @@ public class GreatestTagCountDifference implements PhotoToSlide {
         List<Photo> verticals = photos.stream().filter(Photo::isVertical).collect(Collectors.toList());
         List<Photo> horizontals = photos.stream().filter(Photo::isHorizontal).collect(Collectors.toList());
 
-        photos.sort(Comparator.comparingInt(a -> a.getTags().size()));
+        verticals.sort(Comparator.comparingInt(a -> a.getTags().size()));
         final ArrayDeque<Photo> deque = new ArrayDeque<>(verticals);
         for (int i = 0; i < deque.size() / 2; i++) {
             final Slide slide = Slide.createVerticalSlide(deque.pollFirst(), deque.pollLast());
