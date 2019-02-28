@@ -2,7 +2,8 @@ package hashcode;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class Main {
@@ -18,7 +19,7 @@ public class Main {
             // TODO output show
 
             final String fileName = file.getName();
-            // Output.writeOutput(objs, "out/" + fileName.substring(0, fileName.indexOf(".")) + ".out.txt");
+            Output.writeOutput(show.getSlides(), "out/" + fileName.substring(0, fileName.indexOf(".")) + ".out.txt");
         }
     }
 
