@@ -1,6 +1,6 @@
 package hashcode;
 
-import hashcode.implementations.DescendingTagCount;
+import hashcode.implementations.ConcurrentGroupedDescendingTagSorter;
 import hashcode.implementations.pts.SmallestTagThrowaway;
 import hashcode.interfaces.PhotoToSlide;
 import hashcode.interfaces.SlideToSlideshow;
@@ -21,7 +21,7 @@ public class Main {
             final String filename = file.getName().substring(0, file.getName().indexOf("."));
 
             PhotoToSlide a = new SmallestTagThrowaway();
-            SlideToSlideshow b = new DescendingTagCount();
+            SlideToSlideshow b = new ConcurrentGroupedDescendingTagSorter(1);
             SlideshowMaker maker = new SlideshowMaker(a, b);
             Slideshow show = maker.make(photos);
 

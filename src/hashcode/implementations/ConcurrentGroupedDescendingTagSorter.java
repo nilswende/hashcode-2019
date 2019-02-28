@@ -8,6 +8,9 @@ import java.util.*;
 
 public class ConcurrentGroupedDescendingTagSorter implements SlideToSlideshow {
 
+    /**
+     * Hängt von der Verteilung der Tags innerhalb einer Datei ab.
+     */
     private final int bucketSplitter;
 
     public ConcurrentGroupedDescendingTagSorter(int bucketSplitter) {
