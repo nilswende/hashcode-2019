@@ -25,8 +25,12 @@ public class SmallestTagThrowaway implements PhotoToSlide {
             for (int inner = 2; inner < verticals.size(); inner++) {
                 Photo that = verticals.get(inner);
                 if (photo.getTagSimilarity(that) < similarity) {
+                    similarity = photo.getTagSimilarity(that);
                     second = that;
                     secondIndex = inner;
+                }
+                if (similarity == 0) {
+                    break;
                 }
             }
             slides.add(Slide.createVerticalSlide(photo, second));
