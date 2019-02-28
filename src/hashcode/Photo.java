@@ -33,6 +33,10 @@ public class Photo {
         return tags;
     }
 
+    public int getTagCount () {
+        return getTags().size();
+    }
+
     public String toString(){
         return String.valueOf(id);
     }
