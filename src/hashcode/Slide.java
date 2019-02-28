@@ -1,9 +1,6 @@
 package hashcode;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by nilsw
@@ -25,7 +22,11 @@ public class Slide {
     }
 
     public Set<String> getTags () {
-        return null;
+        final HashSet<String> strings = new HashSet<>();
+        for (Photo photo : photos) {
+            strings.addAll(photo.getTags());
+        }
+        return strings;
     }
 
     public String toString () {
