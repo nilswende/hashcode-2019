@@ -2,59 +2,46 @@ package hashcode.implementations;
 
 import hashcode.Slide;
 import hashcode.Slideshow;
-import hashcode.interfaces.SlideToSlideshow;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
-public class ConcurrentGroupedDescendingTagSorter implements SlideToSlideshow {
+public class ConcurrentGroupedDescendingTagSorter extends GroupedDescendingTagSorter {
 
-    /**
-     * Hängt von der Verteilung der Tags innerhalb einer Datei ab.
-     */
-    private final int bucketSplitter;
-
-    public ConcurrentGroupedDescendingTagSorter(int bucketSplitter) {
-        this.bucketSplitter = bucketSplitter;
+    public ConcurrentGroupedDescendingTagSorter (int bucketSplitter) {
+        super(bucketSplitter);
     }
 
     @Override
-    public Slideshow make(List<Slide> slides) {
-        Map<Integer, List<Slide>> map = new HashMap<>();
+    public Slideshow make (List<Slide> slides) {
+        Map<Integer, List<Slide>> buckets = new ConcurrentHashMap<>();
 
-        for (int bucket = 0; bucket < 100 / bucketSplitter; bucket++) {
-            map.put(bucket, new ArrayList<>());
+        for (int bucket = 0; bucket < 100 / getBucketSplitter(); bucket++) {
+            buckets.put(bucket, new ArrayList<>());
         }
 
         System.out.println("sorting in buckets");
         for (Slide slide : slides) {
-            int bucket = slide.getTagCount() / bucketSplitter;
-            map.get(bucket).add(slide);
+            int bucket = slide.getTagCount() / getBucketSplitter();
+            buckets.get(bucket).add(slide);
         }
 
-        List<Thread> threads = new ArrayList<>(bucketSplitter);
-        // sort lists in map
-        for (int bucket = 0; bucket < map.keySet().size(); bucket++) {
+        final ExecutorService pool = Executors.newFixedThreadPool(buckets.size());
+        // sort lists in buckets
+        for (int bucket = 0; bucket < buckets.size(); bucket++) {
             final int a = bucket;
-            Thread t = new Thread(() -> {
-                map.put(a, sort(map.get(a)));
-
-            });
-            threads.add(t);
-            t.start();
+            pool.execute(() -> buckets.put(a, sort(buckets.get(a))));
         }
-
-        for (Thread t: threads) {
-            try {
-                t.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-
+        shutdownAndAwaitTermination(pool);
 
         Slideshow show = new Slideshow();
-        for (int bucket = 0; bucket < map.keySet().size(); bucket++) {
-            for (Slide slide : map.get(bucket)) {
+        for (int bucket = 0; bucket < buckets.size(); bucket++) {
+            for (Slide slide : buckets.get(bucket)) {
                 show.add(slide);
             }
         }
@@ -62,59 +49,22 @@ public class ConcurrentGroupedDescendingTagSorter implements SlideToSlideshow {
         return show;
     }
 
-    private List<Slide> sort(List<Slide> slides) {
-        final int initSize = slides.size();
-        if (slides.size() <= 2) {
-            return slides;
-        }
-
-        List<Slide> newList = new ArrayList<>(slides.size());
-        newList.add(slides.get(0));
-        slides.remove(0);
-
-        while (slides.size() > 0) {
-            System.out.println("remaining " + slides.size() + "/" + initSize);
-            Slide current = newList.get(newList.size() - 1);
-
-            int bestScore = -1;
-            int bestIndex = -1;
-            for (int i = 0; i < slides.size(); i++) {
-                if (score(current, slides.get(i)) > bestScore) {
-                    bestScore = score(current, slides.get(i));
-                    bestIndex = i;
-                }
+    private void shutdownAndAwaitTermination (ExecutorService pool) {
+        pool.shutdown(); // Disable new tasks from being submitted
+        try {
+            // Wait a while for existing tasks to terminate
+            if (!pool.awaitTermination(1, TimeUnit.DAYS)) {
+                pool.shutdownNow(); // Cancel currently executing tasks
+                // Wait a while for tasks to respond to being cancelled
+                if (!pool.awaitTermination(60, TimeUnit.SECONDS))
+                    System.err.println("Pool did not terminate");
             }
-
-            newList.add(slides.get(bestIndex));
-            slides.remove(bestIndex);
+        } catch (InterruptedException ie) {
+            // (Re-)Cancel if current thread also interrupted
+            pool.shutdownNow();
+            // Preserve interrupt status
+            Thread.currentThread().interrupt();
         }
-
-        return newList;
     }
 
-    private int score(Slide one, Slide two) {
-        int test = onlyInOne(two.getTags(), one.getTags());
-        int test2 = commonTags(one.getTags(), two.getTags());
-        int test3 = onlyInOne(one.getTags(), two.getTags());
-        return Math.min(test, Math.min(test2, test3));
-    }
-
-    private static int commonTags(Set<String> slideTags, Set<String> lastSlideTags) {
-        slideTags = new HashSet<>(slideTags);
-        lastSlideTags = new HashSet<>(lastSlideTags);
-        int score = slideTags.size();
-        slideTags.removeAll(lastSlideTags);
-        score -= slideTags.size();
-        return score;
-    }
-
-    private static int onlyInOne(Set<String> slideTags, Set<String> lastSlideTags) {
-        slideTags = new HashSet<>(slideTags);
-        lastSlideTags = new HashSet<>(lastSlideTags);
-
-        int score;
-        slideTags.removeAll(lastSlideTags);
-        score = slideTags.size();
-        return score;
-    }
 }

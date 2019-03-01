@@ -1,21 +1,28 @@
 package hashcode.implementations;
 
+import hashcode.Score;
 import hashcode.Slide;
 import hashcode.Slideshow;
 import hashcode.interfaces.SlideToSlideshow;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class GroupedDescendingTagSorter implements SlideToSlideshow {
 
+    /**
+     * Hängt von der Verteilung der Tags innerhalb einer Datei ab.
+     */
     private final int bucketSplitter;
 
-    public GroupedDescendingTagSorter(int bucketSplitter) {
+    public GroupedDescendingTagSorter (int bucketSplitter) {
         this.bucketSplitter = bucketSplitter;
     }
 
     @Override
-    public Slideshow make(List<Slide> slides) {
+    public Slideshow make (List<Slide> slides) {
         Map<Integer, List<Slide>> map = new HashMap<>();
 
         for (int bucket = 0; bucket < 100 / bucketSplitter; bucket++) {
@@ -44,15 +51,14 @@ public class GroupedDescendingTagSorter implements SlideToSlideshow {
         return show;
     }
 
-    private List<Slide> sort(List<Slide> slides) {
+    List<Slide> sort (List<Slide> slides) {
         final int initSize = slides.size();
         if (slides.size() <= 2) {
             return slides;
         }
 
         List<Slide> newList = new ArrayList<>(slides.size());
-        newList.add(slides.get(0));
-        slides.remove(0);
+        newList.add(slides.remove(0));
 
         while (slides.size() > 0) {
             System.out.println("remaining " + slides.size() + "/" + initSize);
@@ -61,8 +67,9 @@ public class GroupedDescendingTagSorter implements SlideToSlideshow {
             int bestScore = -1;
             int bestIndex = -1;
             for (int i = 0; i < slides.size(); i++) {
-                if (score(current, slides.get(i)) > bestScore) {
-                    bestScore = score(current, slides.get(i));
+                final int score = Score.getScore(current, slides.get(i));
+                if (score > bestScore) {
+                    bestScore = score;
                     bestIndex = i;
                 }
             }
@@ -74,29 +81,8 @@ public class GroupedDescendingTagSorter implements SlideToSlideshow {
         return newList;
     }
 
-    private int score(Slide one, Slide two) {
-        int test = onlyInOne(two.getTags(), one.getTags());
-        int test2 = commonTags(one.getTags(), two.getTags());
-        int test3 = onlyInOne(one.getTags(), two.getTags());
-        return Math.min(test, Math.min(test2, test3));
+    public int getBucketSplitter () {
+        return bucketSplitter;
     }
 
-    private static int commonTags(Set<String> slideTags, Set<String> lastSlideTags) {
-        slideTags = new HashSet<>(slideTags);
-        lastSlideTags = new HashSet<>(lastSlideTags);
-        int score = slideTags.size();
-        slideTags.removeAll(lastSlideTags);
-        score -= slideTags.size();
-        return score;
-    }
-
-    private static int onlyInOne(Set<String> slideTags, Set<String> lastSlideTags) {
-        slideTags = new HashSet<>(slideTags);
-        lastSlideTags = new HashSet<>(lastSlideTags);
-
-        int score;
-        slideTags.removeAll(lastSlideTags);
-        score = slideTags.size();
-        return score;
-    }
 }
