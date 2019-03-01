@@ -8,9 +8,13 @@ import java.util.*;
 public class Slide {
 
     private final List<Photo> photos;
+    private final Set<String> tags = new HashSet<>();
 
     private Slide (List<Photo> photos) {
         this.photos = photos;
+        for (Photo photo : photos) {
+            tags.addAll(photo.getTags());
+        }
     }
 
     public static Slide createHorizontalSlide (Photo photo) {
@@ -22,11 +26,7 @@ public class Slide {
     }
 
     public Set<String> getTags () {
-        final HashSet<String> strings = new HashSet<>();
-        for (Photo photo : photos) {
-            strings.addAll(photo.getTags());
-        }
-        return strings;
+        return tags;
     }
 
     public int getTagCount() {
