@@ -22,7 +22,7 @@ public class SmallestTagThrowaway extends AbstractPhotoToSlide {
             int secondIndex = 1;
             Photo second = verticals.get(secondIndex);
             int similarity = Integer.MAX_VALUE;
-            for (int inner = secondIndex + 1; inner < verticals.size(); inner++) {
+            for (int inner = secondIndex; inner < verticals.size(); inner++) {
                 Photo that = verticals.get(inner);
                 final int tagSimilarity = photo.getTagSimilarity(that);
                 if (tagSimilarity < similarity) {
