@@ -2,26 +2,25 @@ package hashcode.implementations.pts;
 
 import hashcode.Photo;
 import hashcode.Slide;
-import hashcode.interfaces.PhotoToSlide;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by nilsw
  */
-public class SmallestTagThrowaway implements PhotoToSlide {
-    @Override
-    public List<Slide> make (List<Photo> photos) {
-        final List<Slide> slides = photos.stream().filter(Photo::isHorizontal).map(Slide::createHorizontalSlide).collect(Collectors.toList());
+public class SmallestTagThrowaway extends AbstractPhotoToSlide {
 
-        List<Photo> verticals = photos.stream().filter(Photo::isVertical).collect(Collectors.toList());
+    @Override
+    protected List<Slide> makeVerticals (List<Photo> verticals) {
+        final List<Slide> slides = new ArrayList<>(verticals.size() / 2);
+
         while (verticals.size() > 1) {
             Photo photo = verticals.get(0);
-            Photo second = verticals.get(1);
             int secondIndex = 1;
+            Photo second = verticals.get(secondIndex);
             int similarity = Integer.MAX_VALUE;
-            for (int inner = 2; inner < verticals.size(); inner++) {
+            for (int inner = secondIndex + 1; inner < verticals.size(); inner++) {
                 Photo that = verticals.get(inner);
                 final int tagSimilarity = photo.getTagSimilarity(that);
                 if (tagSimilarity < similarity) {
@@ -40,4 +39,5 @@ public class SmallestTagThrowaway implements PhotoToSlide {
 
         return slides;
     }
+
 }
