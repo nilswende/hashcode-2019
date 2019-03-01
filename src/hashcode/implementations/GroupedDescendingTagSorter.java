@@ -51,7 +51,7 @@ public class GroupedDescendingTagSorter implements SlideToSlideshow {
         return show;
     }
 
-    List<Slide> sort (List<Slide> slides) {
+    public static List<Slide> sort (List<Slide> slides) {
         final int initSize = slides.size();
         if (slides.size() <= 2) {
             return slides;
@@ -64,21 +64,26 @@ public class GroupedDescendingTagSorter implements SlideToSlideshow {
             System.out.println("remaining " + slides.size() + "/" + initSize);
             Slide current = newList.get(newList.size() - 1);
 
-            int bestScore = -1;
-            int bestIndex = -1;
-            for (int i = 0; i < slides.size(); i++) {
-                final int score = Score.getScore(current, slides.get(i));
-                if (score > bestScore) {
-                    bestScore = score;
-                    bestIndex = i;
-                }
-            }
+            int bestIndex = findBestMatchIndex(current, slides);
 
             newList.add(slides.get(bestIndex));
             slides.remove(bestIndex);
         }
 
         return newList;
+    }
+
+    public static int findBestMatchIndex (Slide current, List<Slide> slides) {
+        int bestScore = -1;
+        int bestIndex = -1;
+        for (int i = 0; i < slides.size(); i++) {
+            final int score = Score.getScore(current, slides.get(i));
+            if (score > bestScore) {
+                bestScore = score;
+                bestIndex = i;
+            }
+        }
+        return bestIndex;
     }
 
     public int getBucketSplitter () {

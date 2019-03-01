@@ -1,6 +1,7 @@
 package hashcode;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -12,6 +13,10 @@ public class Slideshow {
 
     public boolean add (Slide slide) {
         return slides.add(slide);
+    }
+
+    public boolean addAll (Collection<? extends Slide> c) {
+        return slides.addAll(c);
     }
 
     public List<Slide> getSlides () {

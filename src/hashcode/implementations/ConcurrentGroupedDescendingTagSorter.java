@@ -2,6 +2,7 @@ package hashcode.implementations;
 
 import hashcode.Slide;
 import hashcode.Slideshow;
+import hashcode.util.ConcurrencyUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +10,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 public class ConcurrentGroupedDescendingTagSorter extends GroupedDescendingTagSorter {
 
@@ -37,7 +37,7 @@ public class ConcurrentGroupedDescendingTagSorter extends GroupedDescendingTagSo
             final int a = bucket;
             pool.execute(() -> buckets.put(a, sort(buckets.get(a))));
         }
-        shutdownAndAwaitTermination(pool);
+        ConcurrencyUtils.shutdownAndAwaitTermination(pool);
 
         Slideshow show = new Slideshow();
         for (int bucket = 0; bucket < buckets.size(); bucket++) {
@@ -47,24 +47,6 @@ public class ConcurrentGroupedDescendingTagSorter extends GroupedDescendingTagSo
         }
 
         return show;
-    }
-
-    private void shutdownAndAwaitTermination (ExecutorService pool) {
-        pool.shutdown(); // Disable new tasks from being submitted
-        try {
-            // Wait a while for existing tasks to terminate
-            if (!pool.awaitTermination(1, TimeUnit.DAYS)) {
-                pool.shutdownNow(); // Cancel currently executing tasks
-                // Wait a while for tasks to respond to being cancelled
-                if (!pool.awaitTermination(60, TimeUnit.SECONDS))
-                    System.err.println("Pool did not terminate");
-            }
-        } catch (InterruptedException ie) {
-            // (Re-)Cancel if current thread also interrupted
-            pool.shutdownNow();
-            // Preserve interrupt status
-            Thread.currentThread().interrupt();
-        }
     }
 
 }
