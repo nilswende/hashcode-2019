@@ -6,9 +6,9 @@ import hashcode.interfaces.SlideToSlideshow;
 import hashcode.util.ConcurrencyUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
@@ -26,30 +26,31 @@ public class MergeSorter implements SlideToSlideshow {
 
     @Override
     public Slideshow make (List<Slide> slides) {
-        Map<Integer, List<Slide>> buckets = new ConcurrentHashMap<>(nBuckets);
+        Map<Integer, List<Slide>> buckets = new HashMap<>(nBuckets);
 
-        final int chunkSize = (int) Math.ceil(slides.size() / (double) nBuckets);
-        int currentChunk = 0, i = 0;
+        // split slides into equally large buckets
+        final int bucketSize = (int) Math.ceil(slides.size() / (double) nBuckets);
+        int currentBucket = 0, i = 0;
         while (slides.size() > 0) {
-            final List<Slide> list = buckets.computeIfAbsent(currentChunk, b -> new ArrayList<>(chunkSize));
+            final List<Slide> list = buckets.computeIfAbsent(currentBucket, b -> new ArrayList<>(bucketSize));
             list.add(slides.remove(0));
             i++;
-            if (i >= chunkSize) {
+            if (i >= bucketSize) {
                 i = 0;
-                currentChunk++;
+                currentBucket++;
             }
         }
 
+        // sort buckets individually
         final ExecutorService pool = Executors.newFixedThreadPool(buckets.size());
-        // sort lists in buckets
-        for (int bucket = 0; bucket < buckets.size(); bucket++) {
-            final int a = bucket;
-            pool.execute(() -> buckets.put(a, GroupedDescendingTagSorter.sort(buckets.get(a))));
-        }
+        buckets.values().forEach(
+                (v) -> pool.execute(() -> sortInPlace(v))
+        );
         ConcurrencyUtils.shutdownAndAwaitTermination(pool);
 
+        // concat buckets optimally
         final List<List<Slide>> bucketsList = new ArrayList<>(buckets.values());
-        final List<Slide> starts = bucketsList.stream().map(l -> l.get(0)).collect(Collectors.toList());
+        final List<Slide> starts = bucketsList.stream().filter(l -> !l.isEmpty()).map(l -> l.get(0)).collect(Collectors.toList());
         Slideshow show = new Slideshow();
         int nextBucketIndex = 0;
         while (true) {
@@ -69,6 +70,12 @@ public class MergeSorter implements SlideToSlideshow {
         }
 
         return show;
+    }
+
+    private void sortInPlace (List<Slide> slides) {
+        final List<Slide> sorted = GroupedDescendingTagSorter.sort(slides);
+        slides.clear();
+        slides.addAll(sorted);
     }
 
 }

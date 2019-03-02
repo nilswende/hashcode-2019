@@ -54,7 +54,7 @@ public class GroupedDescendingTagSorter implements SlideToSlideshow {
     public static List<Slide> sort (List<Slide> slides) {
         final int initSize = slides.size();
         if (slides.size() <= 2) {
-            return slides;
+            return new ArrayList<>(slides);
         }
 
         List<Slide> newList = new ArrayList<>(slides.size());

@@ -21,7 +21,7 @@ public class Main {
             final String filename = file.getName().substring(0, file.getName().indexOf("."));
 
             PhotoToSlide a = new SmallestTagThrowaway();
-            SlideToSlideshow b = new MergeSorter(12);
+            SlideToSlideshow b = new MergeSorter(Runtime.getRuntime().availableProcessors());
             SlideshowMaker maker = new SlideshowMaker(a, b);
             Slideshow show = maker.make(photos);
 
