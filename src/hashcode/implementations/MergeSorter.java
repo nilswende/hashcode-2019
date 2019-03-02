@@ -26,6 +26,11 @@ public class MergeSorter implements SlideToSlideshow {
 
     @Override
     public Slideshow make (List<Slide> slides) {
+        if (slides.size() < 5 || nBuckets < 2) {
+            Slideshow show = new Slideshow();
+            show.addAll(GroupedDescendingTagSorter.sort(slides));
+            return show;
+        }
         Map<Integer, List<Slide>> buckets = new HashMap<>(nBuckets);
 
         // split slides into equally large buckets
@@ -50,7 +55,7 @@ public class MergeSorter implements SlideToSlideshow {
 
         // concat buckets optimally
         final List<List<Slide>> bucketsList = new ArrayList<>(buckets.values());
-        final List<Slide> starts = bucketsList.stream().filter(l -> !l.isEmpty()).map(l -> l.get(0)).collect(Collectors.toList());
+        final List<Slide> starts = bucketsList.stream().skip(1).map(l -> l.get(0)).collect(Collectors.toList());
         Slideshow show = new Slideshow();
         int nextBucketIndex = 0;
         while (true) {
