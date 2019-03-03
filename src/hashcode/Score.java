@@ -34,7 +34,7 @@ public class Score {
     }
 
     private static int countDifference (final Set<String> slideTags, final Set<String> lastSlideTags) {
-        return slideTags.stream().filter(lastSlideTags::contains).mapToInt(t -> 1).sum();
+        return slideTags.stream().filter(s -> !lastSlideTags.contains(s)).mapToInt(t -> 1).sum();
     }
 
 }
