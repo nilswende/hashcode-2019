@@ -8,11 +8,13 @@ import hashcode.interfaces.SlideshowMaker;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Date;
 import java.util.List;
 
 public class Main {
 
     public static void main (String[] args) throws FileNotFoundException {
+        final Date start = new Date();
         int finalScore = 0;
         final File[] files = new File("res").listFiles();
         assert files != null;
@@ -21,6 +23,7 @@ public class Main {
             final String filename = file.getName().substring(0, file.getName().indexOf("."));
 
             PhotoToSlide a = new SmallestTagThrowaway();
+//            SlideToSlideshow b = new DescendingTagCount();
             SlideToSlideshow b = new MergeSorter(Runtime.getRuntime().availableProcessors());
             SlideshowMaker maker = new SlideshowMaker(a, b);
             Slideshow show = maker.make(photos);
@@ -32,6 +35,8 @@ public class Main {
             Output.writeOutput(show.getSlides(), "out/" + filename + ".out.txt");
         }
         System.out.println("The final score is: " + finalScore);
+        long duration = new Date().getTime() - start.getTime();
+        System.out.println("The final duration is: " + (duration / 10e2));
     }
 
 }
