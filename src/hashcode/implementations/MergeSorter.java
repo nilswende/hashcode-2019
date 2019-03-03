@@ -60,10 +60,10 @@ public class MergeSorter implements SlideToSlideshow {
         while (true) {
             final List<Slide> list = bucketsList.get(nextBucketIndex);
             show.addAll(list);
+            if (starts.isEmpty()) break;
 
             final Slide end = list.get(list.size() - 1);
             final int bestIndex = GroupedDescendingTagSorter.findBestMatchIndex(end, starts);
-            if (bestIndex == -1) break;
             final Slide start = starts.remove(bestIndex);
             for (nextBucketIndex = 0; nextBucketIndex < bucketsList.size(); nextBucketIndex++) {
                 final List<Slide> slideList = bucketsList.get(nextBucketIndex);
