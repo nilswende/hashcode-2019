@@ -24,7 +24,7 @@ public class Main {
 
             PhotoToSlide a = new SmallestTagThrowaway();
 //            SlideToSlideshow b = new DescendingTagCount();
-            SlideToSlideshow b = new MergeSorter(Runtime.getRuntime().availableProcessors());
+            SlideToSlideshow b = new MergeSorter(1);
             SlideshowMaker maker = new SlideshowMaker(a, b);
             Slideshow show = maker.make(photos);
 
