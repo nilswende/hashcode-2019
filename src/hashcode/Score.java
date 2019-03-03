@@ -19,22 +19,20 @@ public class Score {
     }
 
     public static int getScore (Slide lastSlide, Slide slide) {
-        int test = onlyInOne(lastSlide.getTags(), slide.getTags());
-        int test2 = commonTags(slide.getTags(), lastSlide.getTags());
-        int test3 = onlyInOne(slide.getTags(), lastSlide.getTags());
-        return Math.min(test, Math.min(test2, test3));
+        final int commonTags = countCommonTags(lastSlide.getTags(), slide.getTags());
+        int onlyInLast = onlyInOne(lastSlide.getTags(), commonTags);
+        int onlyInCurrent = onlyInOne(slide.getTags(), commonTags);
+        return Math.min(onlyInLast, Math.min(commonTags, onlyInCurrent));
     }
 
-    private static int commonTags (Set<String> slideTags, Set<String> lastSlideTags) {
-        return slideTags.size() - countDifference(slideTags, lastSlideTags);
+    private static int countCommonTags (final Set<String> lastSlideTags, final Set<String> slideTags) {
+        int count = 0;
+        for (final String tag : lastSlideTags) if (slideTags.contains(tag)) count++;
+        return count;
     }
 
-    private static int onlyInOne (Set<String> slideTags, Set<String> lastSlideTags) {
-        return countDifference(slideTags, lastSlideTags);
-    }
-
-    private static int countDifference (final Set<String> slideTags, final Set<String> lastSlideTags) {
-        return slideTags.stream().filter(s -> !lastSlideTags.contains(s)).mapToInt(t -> 1).sum();
+    private static int onlyInOne (Set<String> slideTags, final int intersection) {
+        return slideTags.size() - intersection;
     }
 
 }
