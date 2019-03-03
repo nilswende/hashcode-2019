@@ -1,6 +1,5 @@
 package hashcode;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -27,16 +26,15 @@ public class Score {
     }
 
     private static int commonTags (Set<String> slideTags, Set<String> lastSlideTags) {
-        final HashSet<String> tags = new HashSet<>(slideTags);
-        int score = tags.size();
-        tags.removeAll(lastSlideTags);
-        return score - tags.size();
+        return slideTags.size() - countDifference(slideTags, lastSlideTags);
     }
 
     private static int onlyInOne (Set<String> slideTags, Set<String> lastSlideTags) {
-        final HashSet<String> tags = new HashSet<>(slideTags);
-        tags.removeAll(lastSlideTags);
-        return tags.size();
+        return countDifference(slideTags, lastSlideTags);
+    }
+
+    private static int countDifference (final Set<String> slideTags, final Set<String> lastSlideTags) {
+        return slideTags.stream().filter(lastSlideTags::contains).mapToInt(t -> 1).sum();
     }
 
 }
