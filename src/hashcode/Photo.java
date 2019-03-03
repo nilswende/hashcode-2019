@@ -1,6 +1,5 @@
 package hashcode;
 
-import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -39,12 +38,12 @@ public class Photo {
     }
 
     public int getTagSimilarity (Photo that) {
-        final HashSet<String> thisTags = new HashSet<>(tags);
-        thisTags.retainAll(that.tags);
-        return thisTags.size();
+        int count = 0;
+        for (final String tag : tags) if (that.tags.contains(tag)) count++;
+        return count;
     }
 
-    public String toString(){
+    public String toString () {
         return String.valueOf(id);
     }
 
