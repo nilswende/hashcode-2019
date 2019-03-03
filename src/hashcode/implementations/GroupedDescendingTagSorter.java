@@ -66,8 +66,7 @@ public class GroupedDescendingTagSorter implements SlideToSlideshow {
 
             int bestIndex = findBestMatchIndex(current, slides);
 
-            newList.add(slides.get(bestIndex));
-            slides.remove(bestIndex);
+            newList.add(slides.remove(bestIndex));
         }
 
         return newList;
