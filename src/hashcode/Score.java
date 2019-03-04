@@ -31,8 +31,12 @@ public class Score {
         return count;
     }
 
-    private static int onlyInOne (Set<String> slideTags, final int intersection) {
-        return slideTags.size() - intersection;
+    private static int onlyInOne (Set<String> tags, final int commonTags) {
+        return tags.size() - commonTags;
+    }
+
+    public static int getMaxScore (Slide slide) {
+        return slide.getTagCount() / 2;
     }
 
 }

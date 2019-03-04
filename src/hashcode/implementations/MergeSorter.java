@@ -25,7 +25,6 @@ public class MergeSorter implements SlideToSlideshow {
     public Slideshow make (List<Slide> slides) {
         if (slides.size() < 5 || nBuckets < 2) {
             Slideshow show = new Slideshow();
-            slides.sort(Comparator.comparingInt(Slide::getTagCount));
             show.addAll(GroupedDescendingTagSorter.sort(slides));
             return show;
         }
