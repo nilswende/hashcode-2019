@@ -19,7 +19,6 @@ public class SourceFile {
         this.replicationTime = replicationTime;
         this.id = id;
         this.dependencies = dependencies;
-        this.dependencies = new ArrayList<>();
         this.isRequiredBy = new ArrayList<>();
     }
 
@@ -55,6 +54,14 @@ public class SourceFile {
     }
     public void addRequiredBy(SourceFile file){
         isRequiredBy.add(file);
+    }
+
+    public void setScore (int score) {
+        this.score = score;
+    }
+
+    public void setDeadline (int deadline) {
+        this.deadline = deadline;
     }
 
     public List<SourceFile> getDependencies () {
