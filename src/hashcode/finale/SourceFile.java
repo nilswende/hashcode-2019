@@ -67,4 +67,8 @@ public class SourceFile {
     public List<SourceFile> getDependencies () {
         return dependencies;
     }
+
+    public boolean hasDependencies() {
+        return !dependencies.isEmpty();
+    }
 }
