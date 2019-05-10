@@ -71,4 +71,9 @@ public class SourceFile {
     public boolean hasDependencies() {
         return !dependencies.isEmpty();
     }
+
+    @Override
+    public String toString() {
+        return id;
+    }
 }

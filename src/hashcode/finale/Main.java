@@ -16,9 +16,9 @@ public class Main {
         final File[] files = new File("res/finale").listFiles();
         assert files != null;
         for (File file : files) {
-            if (!file.getName().contains("example")) {
-                continue;
-            }
+//            if (!file.getName().contains("example")) {
+//                continue;
+//            }
 
             Input.read(file);
 

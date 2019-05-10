@@ -1,8 +1,6 @@
 package hashcode.finale;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class LinearCompilationChainGenerator {
@@ -12,9 +10,46 @@ public class LinearCompilationChainGenerator {
         for (int i = 0; i < targets.size(); i++) {
             List<SourceFile> sequence = LinearCompilationChainGenerator.generateLinearChain(targets.get(i));
             for (SourceFile sourceFile : sequence) {
-                servers.get(i % servers.size()).addSourceFile(sourceFile);
+                if (!servers.get(i % servers.size()).getCompilationOrder().contains(sourceFile)) {
+                    servers.get(i % servers.size()).addSourceFile(sourceFile);
+                }
             }
         }
+
+        Map<SourceFile, Integer> timeline = makeTimeline(servers);
+        for (Server server : servers) {
+            int currentTime = 0;
+            for(Iterator<SourceFile> it = server.getCompilationOrder().iterator(); it.hasNext(); ) {
+                SourceFile file = it.next();
+
+                if (timeline.get(file) < currentTime) {
+                    it.remove();
+                }
+
+                currentTime += file.getCompilationTime();
+            }
+        }
+    }
+
+    public static Map<SourceFile, Integer> makeTimeline(List<Server> servers) {
+        Map<SourceFile, Integer> map = new HashMap<>();
+        for (Server server : servers) {
+            int currentTime = 0;
+            for (SourceFile file : server.getCompilationOrder()) {
+                if (!map.containsKey(file)) {
+                    map.put(file, Integer.MAX_VALUE);
+                }
+
+                int timeAfterReplication = currentTime + file.getCompilationTime() + file.getReplicationTime();
+                if (timeAfterReplication < map.get(file)) {
+                    map.put(file, timeAfterReplication);
+                }
+
+                currentTime += file.getCompilationTime();
+            }
+        }
+
+        return map;
     }
 
     public static List<SourceFile> generateLinearChain(SourceFile target) {
