@@ -31,7 +31,7 @@ public class Server {
 
     @Override
     public String toString() {
-        return compilationOrder.stream().map(file -> this.id + " " + file.getId()).collect(Collectors.joining("\n"));
+        return compilationOrder.stream().map(file -> file.getId() + " " + this.id).collect(Collectors.joining("\n"));
     }
 }
 
