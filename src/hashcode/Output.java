@@ -1,8 +1,11 @@
 package hashcode;
 
 import hashcode.finale.Server;
+import hashcode.finale.SourceFile;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,10 +33,35 @@ public class Output {
                 new FileOutputStream(file)))) {
             int compilationSteps = servers.stream().mapToInt(Server::compilationSteps).sum();
             bw.write(compilationSteps + "\n");
-            final String output = servers.stream().map(Object::toString).collect(Collectors.joining("\n"));
+
+            List<CompileStep> steps = new ArrayList<>(compilationSteps);
+            for (Server server : servers) {
+                int time = 0;
+                for(SourceFile sourceFile : server.getCompilationOrder()) {
+                    steps.add(new CompileStep(server.getId(), time, sourceFile.getId()));
+                    time += sourceFile.getCompilationTime();
+                }
+            }
+            steps.sort(Comparator.comparingInt(value -> value.start));
+
+            final String output = steps.stream()
+                    .map(step -> step.file + " " + step.server)
+                    .collect(Collectors.joining("\n"));
             bw.write(output);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private static class CompileStep {
+        int server;
+        int start;
+        String file;
+
+        public CompileStep(int server, int start, String file) {
+            this.server = server;
+            this.start = start;
+            this.file = file;
         }
     }
 
