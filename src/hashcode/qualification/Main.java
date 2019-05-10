@@ -33,7 +33,7 @@ public class Main {
             System.out.println(filename + ": The score is: " + score);
             finalScore += score;
 
-            Output.writeOutput(show.getSlides(), "out/" + filename + ".out.txt");
+            Output.writeOutput(show.getSlides(), "out/qualification/" + filename + ".out.txt");
         }
         System.out.println("The final score is: " + finalScore);
         long duration = new Date().getTime() - start.getTime();
