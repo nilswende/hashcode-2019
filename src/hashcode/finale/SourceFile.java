@@ -45,7 +45,7 @@ public class SourceFile {
         return deadline;
     }
 
-    public int getScore(){return score};
+    public int getScore(){return score;}
 
     public List<SourceFile> getDependsOn () {
         return dependsOn;
