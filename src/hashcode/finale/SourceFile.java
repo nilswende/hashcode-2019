@@ -22,6 +22,9 @@ public class SourceFile {
         this.isRequiredBy = new ArrayList<>();
     }
 
+    public int getFullTime () {
+        return compilationTime + replicationTime;
+    }
 
     public String getId () {
         return id;

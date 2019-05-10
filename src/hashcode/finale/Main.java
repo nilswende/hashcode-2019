@@ -5,7 +5,6 @@ import hashcode.Output;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Main {
 
@@ -16,15 +15,17 @@ public class Main {
         final File[] files = new File("res/finale").listFiles();
         assert files != null;
         for (File file : files) {
-//            if (!file.getName().contains("example")) {
-//                continue;
-//            }
-
             Input.read(file);
-
-            LinearCompilationChainGenerator.makeListOfServers(sourceFiles, servers);
-
             final String filename = file.getName().substring(0, file.getName().indexOf("."));
+            System.out.println(filename);
+
+            // magic
+            new ByServer().make(sourceFiles);
+
+//            int score = Score.getScore(show.getSlides());
+//            System.out.println(filename + ": The score is: " + score);
+//            finalScore += score;
+
             Output.writeServerOutput(servers, "out/finale/" + filename + ".out.txt");
         }
     }
