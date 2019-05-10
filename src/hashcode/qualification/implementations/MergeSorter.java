@@ -1,9 +1,9 @@
-package hashcode.implementations;
+package hashcode.qualification.implementations;
 
-import hashcode.Slide;
-import hashcode.Slideshow;
-import hashcode.interfaces.SlideToSlideshow;
-import hashcode.util.ConcurrencyUtils;
+import hashcode.qualification.Slide;
+import hashcode.qualification.Slideshow;
+import hashcode.qualification.interfaces.SlideToSlideshow;
+import hashcode.qualification.util.ConcurrencyUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;

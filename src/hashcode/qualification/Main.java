@@ -1,10 +1,11 @@
-package hashcode;
+package hashcode.qualification;
 
-import hashcode.implementations.MergeSorter;
-import hashcode.implementations.pts.SmallestTagThrowaway;
-import hashcode.interfaces.PhotoToSlide;
-import hashcode.interfaces.SlideToSlideshow;
-import hashcode.interfaces.SlideshowMaker;
+import hashcode.Output;
+import hashcode.qualification.implementations.MergeSorter;
+import hashcode.qualification.implementations.pts.SmallestTagThrowaway;
+import hashcode.qualification.interfaces.PhotoToSlide;
+import hashcode.qualification.interfaces.SlideToSlideshow;
+import hashcode.qualification.interfaces.SlideshowMaker;
 
 import java.io.File;
 import java.io.FileNotFoundException;

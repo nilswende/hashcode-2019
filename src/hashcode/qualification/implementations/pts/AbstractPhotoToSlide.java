@@ -1,8 +1,8 @@
-package hashcode.implementations.pts;
+package hashcode.qualification.implementations.pts;
 
-import hashcode.Photo;
-import hashcode.Slide;
-import hashcode.interfaces.PhotoToSlide;
+import hashcode.qualification.Photo;
+import hashcode.qualification.Slide;
+import hashcode.qualification.interfaces.PhotoToSlide;
 
 import java.util.List;
 import java.util.stream.Collectors;

@@ -1,8 +1,9 @@
-package hashcode.strategy;
+package hashcode.qualification.strategy;
 
-import hashcode.Photo;
-import hashcode.Slide;
-import hashcode.Slideshow;
+import hashcode.qualification.Photo;
+import hashcode.qualification.Slide;
+import hashcode.qualification.Slideshow;
+import hashcode.qualification.Strategy;
 
 import java.util.Collections;
 import java.util.List;

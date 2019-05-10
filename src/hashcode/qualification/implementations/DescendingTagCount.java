@@ -1,8 +1,8 @@
-package hashcode.implementations;
+package hashcode.qualification.implementations;
 
-import hashcode.Slide;
-import hashcode.Slideshow;
-import hashcode.interfaces.SlideToSlideshow;
+import hashcode.qualification.Slide;
+import hashcode.qualification.Slideshow;
+import hashcode.qualification.interfaces.SlideToSlideshow;
 
 import java.util.Comparator;
 import java.util.List;

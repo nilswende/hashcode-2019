@@ -1,4 +1,4 @@
-package hashcode;
+package hashcode.qualification;
 
 import java.util.*;
 

@@ -1,7 +1,7 @@
-package hashcode.implementations.pts;
+package hashcode.qualification.implementations.pts;
 
-import hashcode.Photo;
-import hashcode.Slide;
+import hashcode.qualification.Photo;
+import hashcode.qualification.Slide;
 
 import java.util.ArrayList;
 import java.util.Comparator;

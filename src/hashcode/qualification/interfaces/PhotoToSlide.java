@@ -1,7 +1,7 @@
-package hashcode.interfaces;
+package hashcode.qualification.interfaces;
 
-import hashcode.Photo;
-import hashcode.Slide;
+import hashcode.qualification.Photo;
+import hashcode.qualification.Slide;
 
 import java.util.List;
 
