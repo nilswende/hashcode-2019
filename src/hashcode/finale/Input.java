@@ -47,7 +47,7 @@ public class Input {
             servers.add(new Server(l));
         }
         Main.setServers(servers);
-        Main.setSourceFiles(files);
+        Main.setSourceFiles(new ArrayList<>(files.values()));
     }
 
 }

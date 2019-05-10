@@ -5,18 +5,17 @@ import hashcode.Output;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.List;
-import java.util.Map;
 
 public class Main {
 
     private static List<Server> servers;
-    private static Map<String,SourceFile> sourceFiles;
+    private static List<SourceFile> sourceFiles;
 
     public static void main(String[] args) throws FileNotFoundException {
         final File[] files = new File("res/finale").listFiles();
         assert files != null;
         for (File file : files) {
-            Input.read(file);
+            // Input.read(file);
             final String filename = file.getName().substring(0, file.getName().indexOf("."));
 
             // magic
@@ -37,11 +36,11 @@ public class Main {
         Main.servers = servers;
     }
 
-    public static Map<String,SourceFile> getSourceFiles () {
+    public static List<SourceFile> getSourceFiles () {
         return sourceFiles;
     }
 
-    public static void setSourceFiles (Map<String,SourceFile> sourceFiles) {
+    public static void setSourceFiles (List<SourceFile> sourceFiles) {
         Main.sourceFiles = sourceFiles;
     }
 }
