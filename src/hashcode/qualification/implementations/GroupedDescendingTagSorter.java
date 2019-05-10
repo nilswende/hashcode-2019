@@ -5,10 +5,7 @@ import hashcode.qualification.Slide;
 import hashcode.qualification.Slideshow;
 import hashcode.qualification.interfaces.SlideToSlideshow;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class GroupedDescendingTagSorter implements SlideToSlideshow {
 
@@ -57,6 +54,7 @@ public class GroupedDescendingTagSorter implements SlideToSlideshow {
             return new ArrayList<>(slides);
         }
 
+        slides.sort(Comparator.comparingInt(Slide::getTagCount));
         List<Slide> newList = new ArrayList<>(slides.size());
         newList.add(slides.remove(0));
 
@@ -66,14 +64,14 @@ public class GroupedDescendingTagSorter implements SlideToSlideshow {
 
             int bestIndex = findBestMatchIndex(current, slides);
 
-            newList.add(slides.get(bestIndex));
-            slides.remove(bestIndex);
+            newList.add(slides.remove(bestIndex));
         }
 
         return newList;
     }
 
     public static int findBestMatchIndex (Slide current, List<Slide> slides) {
+        final int maxScore = Score.getMaxScore(current);
         int bestScore = -1;
         int bestIndex = -1;
         for (int i = 0; i < slides.size(); i++) {
@@ -81,6 +79,7 @@ public class GroupedDescendingTagSorter implements SlideToSlideshow {
             if (score > bestScore) {
                 bestScore = score;
                 bestIndex = i;
+                if (bestScore == maxScore) break;
             }
         }
         return bestIndex;

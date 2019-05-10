@@ -5,10 +5,7 @@ import hashcode.qualification.Slideshow;
 import hashcode.qualification.interfaces.SlideToSlideshow;
 import hashcode.qualification.util.ConcurrencyUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
@@ -26,7 +23,12 @@ public class MergeSorter implements SlideToSlideshow {
 
     @Override
     public Slideshow make (List<Slide> slides) {
-        Map<Integer, List<Slide>> buckets = new HashMap<>(nBuckets);
+        if (slides.size() < 5 || nBuckets < 2) {
+            Slideshow show = new Slideshow();
+            show.addAll(GroupedDescendingTagSorter.sort(slides));
+            return show;
+        }
+        final Map<Integer, List<Slide>> buckets = new HashMap<>(nBuckets);
 
         // split slides into equally large buckets
         final int bucketSize = (int) Math.ceil(slides.size() / (double) nBuckets);
@@ -49,20 +51,22 @@ public class MergeSorter implements SlideToSlideshow {
         ConcurrencyUtils.shutdownAndAwaitTermination(pool);
 
         // concat buckets optimally
-        final List<List<Slide>> bucketsList = new ArrayList<>(buckets.values());
-        final List<Slide> starts = bucketsList.stream().filter(l -> !l.isEmpty()).map(l -> l.get(0)).collect(Collectors.toList());
-        Slideshow show = new Slideshow();
+        final List<List<Slide>> bucketsList = buckets.values().stream()
+                .sorted(Comparator.comparingInt(l -> l.get(0).getTagCount()))
+                .collect(Collectors.toList());
+        final List<Slide> starts = bucketsList.stream().skip(1).map(l -> l.get(0)).collect(Collectors.toList());
+        final Slideshow show = new Slideshow();
         int nextBucketIndex = 0;
         while (true) {
-            List<Slide> list = bucketsList.get(nextBucketIndex);
+            final List<Slide> list = bucketsList.get(nextBucketIndex);
             show.addAll(list);
+            if (starts.isEmpty()) break;
 
-            Slide end = list.get(list.size() - 1);
-            int bestIndex = GroupedDescendingTagSorter.findBestMatchIndex(end, starts);
-            if (bestIndex == -1) break;
+            final Slide end = list.get(list.size() - 1);
+            final int bestIndex = GroupedDescendingTagSorter.findBestMatchIndex(end, starts);
             final Slide start = starts.remove(bestIndex);
             for (nextBucketIndex = 0; nextBucketIndex < bucketsList.size(); nextBucketIndex++) {
-                List<Slide> slideList = bucketsList.get(nextBucketIndex);
+                final List<Slide> slideList = bucketsList.get(nextBucketIndex);
                 if (start.equals(slideList.get(0))) {
                     break;
                 }

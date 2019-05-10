@@ -18,25 +18,22 @@ public class SmallestTagThrowaway extends AbstractPhotoToSlide {
         verticals.sort(Comparator.comparingInt(Photo::getTagCount));
 
         while (verticals.size() > 1) {
-            Photo photo = verticals.get(0);
-            int secondIndex = 1;
-            Photo second = verticals.get(secondIndex);
+            Photo photo = verticals.remove(0);
+            int secondIndex = 0;
             int similarity = Integer.MAX_VALUE;
-            for (int inner = secondIndex; inner < verticals.size(); inner++) {
-                Photo that = verticals.get(inner);
+            for (int current = secondIndex; current < verticals.size(); current++) {
+                Photo that = verticals.get(current);
                 final int tagSimilarity = photo.getTagSimilarity(that);
                 if (tagSimilarity < similarity) {
                     similarity = tagSimilarity;
-                    second = that;
-                    secondIndex = inner;
+                    secondIndex = current;
                 }
                 if (similarity == 0) {
                     break;
                 }
             }
+            final Photo second = verticals.remove(secondIndex);
             slides.add(Slide.createVerticalSlide(photo, second));
-            verticals.remove(secondIndex);
-            verticals.remove(0);
         }
 
         return slides;

@@ -1,6 +1,5 @@
 package hashcode.qualification;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -20,23 +19,24 @@ public class Score {
     }
 
     public static int getScore (Slide lastSlide, Slide slide) {
-        int test = onlyInOne(lastSlide.getTags(), slide.getTags());
-        int test2 = commonTags(slide.getTags(), lastSlide.getTags());
-        int test3 = onlyInOne(slide.getTags(), lastSlide.getTags());
-        return Math.min(test, Math.min(test2, test3));
+        final int commonTags = countCommonTags(lastSlide.getTags(), slide.getTags());
+        int onlyInLast = onlyInOne(lastSlide.getTags(), commonTags);
+        int onlyInCurrent = onlyInOne(slide.getTags(), commonTags);
+        return Math.min(onlyInLast, Math.min(commonTags, onlyInCurrent));
     }
 
-    private static int commonTags (Set<String> slideTags, Set<String> lastSlideTags) {
-        final HashSet<String> tags = new HashSet<>(slideTags);
-        int score = tags.size();
-        tags.removeAll(lastSlideTags);
-        return score - tags.size();
+    private static int countCommonTags (final Set<String> lastSlideTags, final Set<String> slideTags) {
+        int count = 0;
+        for (final String tag : lastSlideTags) if (slideTags.contains(tag)) count++;
+        return count;
     }
 
-    private static int onlyInOne (Set<String> slideTags, Set<String> lastSlideTags) {
-        final HashSet<String> tags = new HashSet<>(slideTags);
-        tags.removeAll(lastSlideTags);
-        return tags.size();
+    private static int onlyInOne (Set<String> tags, final int commonTags) {
+        return tags.size() - commonTags;
+    }
+
+    public static int getMaxScore (Slide slide) {
+        return slide.getTagCount() / 2;
     }
 
 }
