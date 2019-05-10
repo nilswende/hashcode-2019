@@ -4,11 +4,11 @@ import hashcode.Output;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 
 public class Main {
 
-    public static void main (String[] args) throws FileNotFoundException {
-        int finalScore = 0;
+    public static void main(String[] args) throws FileNotFoundException {
         final File[] files = new File("res/finale").listFiles();
         assert files != null;
         for (File file : files) {
@@ -21,9 +21,9 @@ public class Main {
 //            System.out.println(filename + ": The score is: " + score);
 //            finalScore += score;
 
-            Output.writeOutput(null, "out/" + filename + ".out.txt");
+            ArrayList<Server> servers = new ArrayList<>();
+            Output.writeServerOutput(servers, "out/finale/" + filename + ".out.txt");
         }
-        System.out.println("The final score is: " + finalScore);
     }
 
 }
