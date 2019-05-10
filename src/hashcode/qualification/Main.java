@@ -17,7 +17,7 @@ public class Main {
     public static void main (String[] args) throws FileNotFoundException {
         final Date start = new Date();
         int finalScore = 0;
-        final File[] files = new File("res").listFiles();
+        final File[] files = new File("res/qualification").listFiles();
         assert files != null;
         for (File file : files) {
             final List<Photo> photos = Input.read(file);
